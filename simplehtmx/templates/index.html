@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/htmx.org@1.6.1"></script>
+
+    <title>Htmx - Django</title>
+</head>
+<body>
+    
+    <form method="get" id="simplehtmx" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{form.as_p}}
+        <div id="targetform"></div>        
+        
+    </form>
+    <button hx-target="#targetform" hx-get="{% url 'getForm' %}" hx-swap="afterend">Add Form</button>
+    <p><button type="submit" form="simplehtmx">Submit</button></p>
+    <p>You have entered as title:</p>
+    {% for i in title %}<p>{{i}}</p>{% endfor %}
+    <p>You have entered as description:</p>
+    {% for i in description %}<p>{{i}}</p>{% endfor %}
+    <script>
+        document.body.addEventListener('htmx:configRequest', (event) => {
+            event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+        })
+    </script>
+</body>
+</html>
